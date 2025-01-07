@@ -25,7 +25,7 @@ class TransactionDB{
   }
 
   Future<int> insertData(TransactionItem trans) async{
-    var db = await this.openDatabase();
+    var db = await openDatabase();
     var store = intMapStoreFactory.store("expense");
 
     var keyId = await store.add(db, {
@@ -43,8 +43,7 @@ class TransactionDB{
     var store = intMapStoreFactory.store("expense");
 
     var snapshot = await store.find(
-      db, 
-      finder: Finder(sortOrders: [SortOrder('date', false)])
+      db
     );
     print("All data: $snapshot");
 
@@ -65,7 +64,7 @@ class TransactionDB{
   }
 
   deleteData(TransactionItem trans) async{
-    var db = await this.openDatabase();
+    var db = await openDatabase();
     var store = intMapStoreFactory.store("expense");
 
     print("Statement id is ${trans.id}");
@@ -80,14 +79,16 @@ class TransactionDB{
   }
 
   updateData(TransactionItem trans) async{
-    var db = await this.openDatabase();
+    var db = await openDatabase();
     var store = intMapStoreFactory.store("expense");
     print("Item key id: ${trans.id}");
 
     final finder = Finder(filter: Filter.byKey(trans.id));
+    Finder(filter: Filter.equals('name', 'รองเท้า'));
     print(finder);
 
     var updateResult = await store.update(db, trans.toMap(), finder: finder);
+    print(trans.toMap());
     print("$updateResult has been updated.");
     db.close();
   }
